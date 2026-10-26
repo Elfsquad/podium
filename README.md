@@ -83,6 +83,7 @@ npm test
 | `src/ui/` | Home screen and presenter view |
 | `src/adapter.js` | Script injected into the deck to read and change the current slide |
 | `src/notes.js` | Speaker-notes parser (unit tested in `test/`) |
+| `build/` | App icons: `icon.svg` is the source, the rest is generated |
 | `test/fixtures/reveal/` | A small reveal.js deck with notes, for trying things out |
 
 `npm run smoke -- path/to/deck.html` opens the deck in rehearsal mode, presses keys in the presenter view,
@@ -101,6 +102,10 @@ npm run dist:win
 
 Output goes to `dist/`: a `.dmg` for macOS, an installer and a portable `.exe` for Windows. Builds are not
 code-signed, so macOS asks you to right-click → Open the first time and Windows SmartScreen shows a warning.
+To change the icon, edit `build/icon.svg` and run `npm run icons` (needs `rsvg-convert` and ImageMagick:
+`brew install librsvg imagemagick`). This rewrites `build/icon.png`, `.icns`, `.ico` and `src/ui/icon.png`;
+commit them all.
+
 `.github/workflows/build.yml` builds both on GitHub Actions when you push a `v*` tag.
 
 Node 26 note: if `npm install` leaves `node_modules/electron/dist` empty, Electron's zip extraction hung. Unzip the

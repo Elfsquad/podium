@@ -60,16 +60,7 @@ kbd {
 .brand { display: flex; gap: 16px; align-items: center; }
 .brand h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; }
 .brand p { margin: 2px 0 0; color: var(--muted); }
-.logo {
-  width: 48px; height: 48px; border-radius: 12px; flex: none;
-  background: linear-gradient(160deg, var(--accent), #8a5cff);
-  position: relative;
-}
-.logo::after {
-  content: ""; position: absolute; left: 11px; right: 11px; bottom: 11px; height: 14px;
-  border-radius: 3px; background: rgba(255,255,255,.92);
-  box-shadow: 0 -12px 0 -4px rgba(255,255,255,.55);
-}
+.logo { width: 48px; height: 48px; flex: none; }
 .drop {
   border: 1.5px dashed #3a404a; border-radius: 14px; padding: 28px; display: flex; align-items: center;
   justify-content: space-between; gap: 16px; background: var(--panel);

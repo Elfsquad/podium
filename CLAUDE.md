@@ -11,6 +11,7 @@ npm start                                   # run the app
 npm test                                    # unit tests (node --test, only covers src/notes.js)
 npm run smoke -- test/fixtures/reveal/index.html   # drive the real app, save screenshots
 npm run dist:mac / npm run dist:win         # installers into dist/
+npm run icons                               # regenerate all icons from build/icon.svg
 ```
 
 The smoke run writes PNGs of both windows plus `log.txt` to `$PODIUM_SMOKE_OUT` (default `<tmp>/podium-smoke`).
@@ -30,6 +31,7 @@ the UI. Only runtime dependency is `marked`.
 | `src/adapter.js` | deck pages | Injected into every deck page; defines `window.__podium` |
 | `src/notes.js` | main process | Pure Markdown-notes parsing and slide mapping; the only unit-tested module |
 | `src/smoke.js` | main process | Loaded only with `--smoke` |
+| `build/icon.svg` | n/a | Icon source. `scripts/make-icons.sh` generates `build/icon.{png,icns,ico}` (installers) and `src/ui/icon.png` (window icon, home-screen logo). Never edit the generated files by hand |
 
 ## How it works
 

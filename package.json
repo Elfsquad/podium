@@ -13,7 +13,8 @@
     "smoke": "electron . --smoke",
     "dist": "electron-builder --publish never",
     "dist:mac": "electron-builder --mac --publish never",
-    "dist:win": "electron-builder --win --publish never"
+    "dist:win": "electron-builder --win --publish never",
+    "icons": "sh scripts/make-icons.sh"
   },
   "build": {
     "appId": "io.elfsquad.podium",
@@ -34,6 +35,7 @@
     ],
     "mac": {
       "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
       "target": [
         {
           "target": "dmg",
@@ -45,6 +47,7 @@
       ]
     },
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "nsis",

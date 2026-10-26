@@ -11,6 +11,8 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 const IS_MAC = process.platform === 'darwin';
 const ADAPTER_SRC = fs.readFileSync(path.join(__dirname, 'adapter.js'), 'utf8');
 const SMOKE = process.argv.includes('--smoke');
+// Packaged builds take their icon from build/; this one is for the window icon on Windows and Linux.
+const ICON = path.join(__dirname, 'ui', 'icon.png');
 
 // ---------- settings ----------
 
@@ -268,6 +270,7 @@ function startShow({ audienceDisplayId, forceRehearsal } = {}) {
   audience = new BrowserWindow({
     show: false,
     title: 'Podium – Audience',
+    icon: ICON,
     backgroundColor: '#000000',
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, sandbox: true, backgroundThrottling: false },
@@ -370,6 +373,7 @@ function createPresenter() {
     minWidth: 900,
     minHeight: 600,
     title: 'Podium',
+    icon: ICON,
     backgroundColor: '#14161a',
     show: false,
     webPreferences: {
@@ -490,6 +494,8 @@ if (!SMOKE && !app.requestSingleInstanceLock()) {
   app.on('open-file', (e, p) => { e.preventDefault(); openRequested(p); });
 
   app.whenReady().then(() => {
+    // When run from source the Dock shows Electron's icon; use ours (with the macOS margin).
+    if (IS_MAC && !app.isPackaged) app.dock.setIcon(path.join(__dirname, '..', 'build', 'icon.png'));
     loadSettings();
     registerIpc();
     buildMenu();
