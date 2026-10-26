@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; frame-src file:">
+<title>Podium</title>
+<link rel="stylesheet" href="presenter.css">
+</head>
+<body>
+
+<!-- ============ Home ============ -->
+<main id="home" class="home">
+  <div class="home-inner">
+    <header class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Podium</h1>
+        <p>Present HTML slides with your speaker notes on a second screen.</p>
+      </div>
+    </header>
+
+    <section id="drop" class="drop" tabindex="0">
+      <div class="drop-text">
+        <strong>Drop an .html presentation here</strong>
+        <span>or a folder with an index.html</span>
+      </div>
+      <button id="open" class="btn primary">Open presentation…</button>
+    </section>
+
+    <section id="deck" class="card" hidden>
+      <div class="deck-head">
+        <div>
+          <div class="eyebrow">Presentation</div>
+          <div id="deck-name" class="deck-name"></div>
+          <div id="deck-path" class="muted small path"></div>
+        </div>
+        <button id="change-deck" class="btn ghost">Change…</button>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Speaker notes</div>
+        <div class="row-body">
+          <div id="notes-file"></div>
+          <div class="row-actions">
+            <button id="pick-notes" class="btn ghost small">Choose .md file…</button>
+            <button id="clear-notes" class="btn ghost small">Use notes from the deck</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Audience screen</div>
+        <div class="row-body">
+          <div id="displays" class="displays"></div>
+          <div id="display-hint" class="muted small"></div>
+        </div>
+      </div>
+
+      <div class="start-row">
+        <button id="start" class="btn primary big">Start presenting</button>
+        <button id="rehearse" class="btn ghost">Rehearse in a window</button>
+      </div>
+    </section>
+
+    <section id="recent-wrap" hidden>
+      <div class="eyebrow">Recent</div>
+      <ul id="recent" class="recent"></ul>
+    </section>
+
+    <footer class="keys muted small">
+      While presenting: <kbd>→</kbd> <kbd>Space</kbd> next · <kbd>←</kbd> back · <kbd>B</kbd> black · <kbd>W</kbd> white ·
+      <kbd>G</kbd> all slides · type a number + <kbd>Enter</kbd> to jump · <kbd>T</kbd> pause timer · <kbd>Esc</kbd> end
+    </footer>
+  </div>
+</main>
+
+<!-- ============ Presenter view ============ -->
+<main id="present" class="present" hidden>
+  <header class="bar">
+    <div class="bar-left">
+      <div class="timer">
+        <span id="elapsed" class="elapsed">0:00</span>
+        <button id="timer-toggle" class="icon-btn" title="Pause timer (T)">❚❚</button>
+        <button id="timer-reset" class="icon-btn" title="Reset timer">↺</button>
+      </div>
+      <div id="pace" class="pace" hidden></div>
+    </div>
+    <div class="bar-mid">
+      <span id="counter" class="counter">– / –</span>
+      <span id="mode" class="mode-tag" hidden>Rehearsal</span>
+    </div>
+    <div class="bar-right">
+      <span id="clock" class="clock"></span>
+      <button id="btn-grid" class="btn ghost small" title="All slides (G)">Slides</button>
+      <button id="btn-black" class="btn ghost small" title="Black screen (B)">Black</button>
+      <button id="btn-white" class="btn ghost small" title="White screen (W)">White</button>
+      <button id="btn-swap" class="btn ghost small" title="Swap screens">Swap screens</button>
+      <button id="btn-end" class="btn danger small" title="End (Esc)">End</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <section class="left">
+      <div class="stage" id="cur-stage">
+        <div class="frame" id="cur-frame">
+          <webview id="cur" partition="podium-preview" webpreferences="contextIsolation=yes, backgroundThrottling=no"></webview>
+          <div id="blank-badge" class="blank-badge" hidden></div>
+        </div>
+      </div>
+      <div class="navrow">
+        <button id="prev" class="btn nav" title="Previous (←)">‹ Back</button>
+        <div class="slide-meta">
+          <div id="cur-title" class="cur-title"></div>
+          <div id="slide-time" class="muted small"></div>
+        </div>
+        <span id="jump" class="jump" hidden></span>
+        <button id="next" class="btn nav primary" title="Next (→)">Next ›</button>
+      </div>
+    </section>
+
+    <section class="right">
+      <div class="next-wrap">
+        <div class="label">Next <span id="next-title" class="muted"></span></div>
+        <div class="stage" id="next-stage">
+          <div class="frame" id="next-frame">
+            <webview id="nextv" partition="podium-preview" webpreferences="contextIsolation=yes, backgroundThrottling=no"></webview>
+            <div id="end-card" class="end-card" hidden>End of presentation</div>
+          </div>
+        </div>
+      </div>
+      <div class="notes-wrap">
+        <div class="label notes-label">
+          <span>Notes <span id="notes-source" class="muted"></span></span>
+          <span class="font-ctl">
+            <button id="font-down" class="icon-btn" title="Smaller (-)">A−</button>
+            <button id="font-up" class="icon-btn" title="Larger (+)">A+</button>
+          </span>
+        </div>
+        <article id="notes" class="notes"></article>
+      </div>
+    </section>
+  </div>
+
+  <div id="grid" class="grid-overlay" hidden>
+    <div class="grid-head">
+      <strong>All slides</strong>
+      <span class="muted small">Click to jump · Esc to close</span>
+    </div>
+    <ol id="grid-list" class="grid-list"></ol>
+  </div>
+</main>
+
+<script src="presenter.js"></script>
+</body>
+</html>
